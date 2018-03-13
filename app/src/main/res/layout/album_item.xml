@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_selector"
+    android:clickable="true"
+    android:focusable="true">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <ImageView
+            android:id="@+id/album_image"
+            android:layout_centerVertical="true"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/ic_album"/>
+
+        <TextView
+            android:id="@+id/album_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/album_image"
+            android:layout_alignParentTop="true"
+            android:textSize="16sp"
+            android:textColor="@color/textColorPrimary"
+            tools:text="雅俗共赏"/>
+
+        <TextView
+            android:id="@+id/album_singer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/album_title"
+            android:layout_marginTop="4dp"
+            android:layout_toRightOf="@+id/album_image"
+            android:textSize="12sp"
+            android:textColor="@color/textColorSecond"
+            tools:text="许嵩" />
+
+        <TextView
+            android:id="@+id/album_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/album_title"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="12sp"
+            android:textColor="@color/textColorSecond"
+            tools:text="共有50首歌"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#eee"/>
+</LinearLayout>

@@ -13,16 +13,4 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:scrollbars="vertical" />
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#f0f0f0">
-        <TextView
-            android:id="@+id/music_num"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_centerHorizontal="true"
-            android:textSize="14sp"
-            tools:text="共有150首歌"/>
-    </RelativeLayout>
 </LinearLayout>
