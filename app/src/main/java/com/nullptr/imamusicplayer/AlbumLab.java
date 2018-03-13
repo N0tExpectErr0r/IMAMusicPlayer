@@ -29,7 +29,7 @@ public class AlbumLab {
         return mAlbums.get(position).getMusics();
     }
 
-    public List<Mp3Info> getMusicsById(int album_id){
+    public List<Mp3Info> getMusicsById(long album_id){
         for (Album album:mAlbums){
             if (album.getAlbum_id() == album_id){
                 return album.getMusics();

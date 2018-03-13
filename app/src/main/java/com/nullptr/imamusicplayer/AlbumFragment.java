@@ -19,6 +19,7 @@ public class AlbumFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         albumList.setLayoutManager(layoutManager);
         AlbumAdapter adapter = new AlbumAdapter(AlbumLab.get(getActivity()).getAlbums());
+
         albumList.setAdapter(adapter);
         return v;
     }

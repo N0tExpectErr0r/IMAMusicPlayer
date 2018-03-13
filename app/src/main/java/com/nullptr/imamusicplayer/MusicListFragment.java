@@ -10,11 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class MusicListFragment extends Fragment{
 
     private RecyclerView musicList;
+    private static List<Mp3Info> mMusics;
 
-    public static MusicListFragment newInstance(){
+    public static MusicListFragment newInstance(List<Mp3Info> musics){
+        mMusics = musics;
         MusicListFragment frag = new MusicListFragment();
         return frag;
 
@@ -32,9 +36,13 @@ public class MusicListFragment extends Fragment{
         musicList = (RecyclerView)v.findViewById(R.id.music_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         musicList.setLayoutManager(layoutManager);
-        MusicAdapter adapter = new MusicAdapter(Mp3Lab.get(getActivity()).getMusics());
-        musicList.setAdapter(adapter);
-
+        if (mMusics==null) {
+            MusicAdapter adapter = new MusicAdapter(Mp3Lab.get(getActivity()).getMusics());
+            musicList.setAdapter(adapter);
+        }else{
+            MusicAdapter adapter = new MusicAdapter(mMusics);
+            musicList.setAdapter(adapter);
+        }
         return v;
     }
 }

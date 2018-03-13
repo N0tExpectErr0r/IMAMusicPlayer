@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void initTab(){
-        MusicListFragment mMusicListFragment = MusicListFragment.newInstance();
+        MusicListFragment mMusicListFragment = MusicListFragment.newInstance(null);
         mFragments.add(mMusicListFragment);
         AlbumFragment albumFragment = AlbumFragment.newInstance();
         mFragments.add(albumFragment);
