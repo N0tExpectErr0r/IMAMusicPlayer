@@ -1,4 +1,4 @@
-package com.nullptr.imamusicplayer;
+package com.nullptr.imamusicplayer.Acitivty;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+
+import com.nullptr.imamusicplayer.Data.AlbumLab;
+import com.nullptr.imamusicplayer.Data.Mp3Lab;
+import com.nullptr.imamusicplayer.Fragment.MusicListFragment;
+import com.nullptr.imamusicplayer.R;
 
 public class AlbumActivity extends AppCompatActivity {
 
@@ -19,6 +24,8 @@ public class AlbumActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         int position = intent.getIntExtra("position",-1);
+        Mp3Lab.isAlbum = true;
+        AlbumLab.album_num = position;
 
         musicListFragment=MusicListFragment.newInstance(AlbumLab.get(this).getMusicsByPosition(position));
 

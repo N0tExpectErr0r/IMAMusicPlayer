@@ -1,4 +1,4 @@
-package com.nullptr.imamusicplayer;
+package com.nullptr.imamusicplayer.Acitivty;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -9,6 +9,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import com.nullptr.imamusicplayer.Fragment.AlbumFragment;
+import com.nullptr.imamusicplayer.Fragment.MusicListFragment;
+import com.nullptr.imamusicplayer.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public Toolbar initToolbar(CharSequence title) {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(title);

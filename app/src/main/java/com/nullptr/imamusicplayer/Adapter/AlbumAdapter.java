@@ -1,4 +1,4 @@
-package com.nullptr.imamusicplayer;
+package com.nullptr.imamusicplayer.Adapter;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.nullptr.imamusicplayer.Acitivty.AlbumActivity;
+import com.nullptr.imamusicplayer.Data.Album;
+import com.nullptr.imamusicplayer.R;
 
 import java.util.List;
 
@@ -28,7 +32,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>{
             albumTitle = (TextView)view.findViewById(R.id.album_title);
             albumSinger = (TextView)view.findViewById(R.id.album_singer);
             albumSize = (TextView)view.findViewById(R.id.album_size);
-            mLinearLayout = (LinearLayout)view.findViewById(R.id.linear_layout);
+            mLinearLayout = (LinearLayout)view.findViewById(R.id.album_layout);
         }
 
     }

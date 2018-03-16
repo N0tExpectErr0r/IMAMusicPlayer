@@ -6,25 +6,27 @@
     android:layout_height="match_parent">
 
     <include
-        android:id="@id/toolbar"
-        layout="@layout/toolbar"/>
+        android:id="@id/toolbar_main"
+        layout="@layout/toolbar_main"/>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/Tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        app:tabIndicatorHeight="2dp"
-        app:tabIndicatorColor="@color/textColorYellow"
-        app:tabTextColor="@color/colorWhite"
-        app:tabSelectedTextColor="@color/textColorYellow">
+        app:tabIndicatorHeight="3dp"
+        app:tabIndicatorColor="@color/colorWhite"
+        app:tabTextColor="#CFD8DC"
+        app:tabSelectedTextColor="@color/colorWhite">
         <android.support.design.widget.TabItem
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:icon="@drawable/ic_music_white"
             android:text="本地音乐"/>
         <android.support.design.widget.TabItem
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:icon="@drawable/ic_album_white"
             android:text="专辑"/>
     </android.support.design.widget.TabLayout>
     <android.support.v4.view.ViewPager

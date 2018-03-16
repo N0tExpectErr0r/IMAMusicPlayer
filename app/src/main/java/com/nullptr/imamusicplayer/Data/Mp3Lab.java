@@ -1,12 +1,15 @@
-package com.nullptr.imamusicplayer;
+package com.nullptr.imamusicplayer.Data;
 
 import android.content.Context;
+
+import com.nullptr.imamusicplayer.Utils.FindSongs;
 
 import java.util.List;
 
 public class Mp3Lab {
     private static Mp3Lab sMp3Lab;
     private List<Mp3Info> mMusics;
+    public static boolean isAlbum;
 
     public static Mp3Lab get(Context context){
         if (sMp3Lab == null){

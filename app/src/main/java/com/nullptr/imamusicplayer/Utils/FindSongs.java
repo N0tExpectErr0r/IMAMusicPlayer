@@ -1,8 +1,10 @@
-package com.nullptr.imamusicplayer;
+package com.nullptr.imamusicplayer.Utils;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.provider.MediaStore;
+
+import com.nullptr.imamusicplayer.Data.Mp3Info;
 
 import java.util.ArrayList;
 import java.util.List;

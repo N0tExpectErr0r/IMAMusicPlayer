@@ -1,10 +1,19 @@
-package com.nullptr.imamusicplayer;
+package com.nullptr.imamusicplayer.Adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.nullptr.imamusicplayer.Data.AlbumLab;
+import com.nullptr.imamusicplayer.Data.Mp3Info;
+import com.nullptr.imamusicplayer.Data.Mp3Lab;
+import com.nullptr.imamusicplayer.Service.PlayerService;
+import com.nullptr.imamusicplayer.R;
+import com.nullptr.imamusicplayer.TAG.PlayerMsg;
 
 import java.util.List;
 
@@ -17,12 +26,14 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
         TextView musicSinger;
         TextView musicAlbum;
         TextView musicNumber;
+        LinearLayout mLinearLayout;
         public ViewHolder(View view){
             super(view);
             musicTitle = (TextView)view.findViewById(R.id.music_title);
             musicSinger = (TextView)view.findViewById(R.id.music_singer);
             musicAlbum = (TextView)view.findViewById(R.id.music_album);
             musicNumber = (TextView)view.findViewById(R.id.music_number);
+            mLinearLayout = (LinearLayout)view.findViewById(R.id.music_layout);
         }
 
     }
@@ -32,9 +43,23 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.music_item,parent,false);
-        ViewHolder holder = new ViewHolder(view);
+        final ViewHolder holder = new ViewHolder(view);
+        holder.mLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = holder.getAdapterPosition();
+                Intent intent = new Intent(parent.getContext(),PlayerService.class);
+                if (Mp3Lab.isAlbum == false) {
+                    intent.putExtra("path", Mp3Lab.get(parent.getContext()).getMusic(position).getUrl());
+                }else{
+                    intent.putExtra("path", AlbumLab.get(parent.getContext()).getMusicsByPosition(AlbumLab.album_num).get(position).getUrl());
+                }
+                intent.putExtra("MSG", PlayerMsg.PLAY_MSG);
+                parent.getContext().startService(intent);
+            }
+        });
         return holder;
     }
 

@@ -1,6 +1,8 @@
-package com.nullptr.imamusicplayer;
+package com.nullptr.imamusicplayer.Data;
 
 import android.content.Context;
+
+import com.nullptr.imamusicplayer.Utils.GetAlbum;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +10,7 @@ import java.util.List;
 public class AlbumLab {
     private static AlbumLab sAlbumLab;
     private List<Album> mAlbums;
+    public static int album_num;
 
     public static AlbumLab get(Context context){
         if (sAlbumLab==null){

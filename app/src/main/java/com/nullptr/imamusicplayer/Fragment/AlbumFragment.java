@@ -1,4 +1,4 @@
-package com.nullptr.imamusicplayer;
+package com.nullptr.imamusicplayer.Fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.nullptr.imamusicplayer.Adapter.AlbumAdapter;
+import com.nullptr.imamusicplayer.Data.AlbumLab;
+import com.nullptr.imamusicplayer.R;
 
 
 public class AlbumFragment extends Fragment {

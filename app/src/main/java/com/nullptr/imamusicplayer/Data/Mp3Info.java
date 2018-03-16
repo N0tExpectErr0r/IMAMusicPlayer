@@ -1,4 +1,4 @@
-package com.nullptr.imamusicplayer;
+package com.nullptr.imamusicplayer.Data;
 
 public class Mp3Info{
     private long id;

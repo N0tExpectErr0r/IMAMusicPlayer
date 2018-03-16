@@ -1,4 +1,7 @@
-package com.nullptr.imamusicplayer;
+package com.nullptr.imamusicplayer.Utils;
+
+import com.nullptr.imamusicplayer.Data.Album;
+import com.nullptr.imamusicplayer.Data.Mp3Info;
 
 import java.util.ArrayList;
 import java.util.List;

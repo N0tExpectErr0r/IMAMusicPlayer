@@ -1,4 +1,4 @@
-package com.nullptr.imamusicplayer;
+package com.nullptr.imamusicplayer.Data;
 
 import java.util.ArrayList;
 import java.util.List;
