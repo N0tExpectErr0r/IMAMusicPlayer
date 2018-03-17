@@ -9,13 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.nullptr.imamusicplayer.Data.AlbumLab;
-import com.nullptr.imamusicplayer.Data.Mp3Lab;
-import com.nullptr.imamusicplayer.Fragment.MusicListFragment;
+import com.nullptr.imamusicplayer.Fragment.AlbumMusicListFragment;
+import com.nullptr.imamusicplayer.Fragment.BottomFragment;
 import com.nullptr.imamusicplayer.R;
 
 public class AlbumActivity extends AppCompatActivity {
 
-    private MusicListFragment musicListFragment;
+    private AlbumMusicListFragment musicListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +24,9 @@ public class AlbumActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         int position = intent.getIntExtra("position",-1);
-        Mp3Lab.isAlbum = true;
         AlbumLab.album_num = position;
 
-        musicListFragment=MusicListFragment.newInstance(AlbumLab.get(this).getMusicsByPosition(position));
+        musicListFragment=AlbumMusicListFragment.newInstance(AlbumLab.get(this).getMusicsByPosition(position));
 
         android.support.v4.app.FragmentManager manager = this.getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
@@ -36,6 +35,16 @@ public class AlbumActivity extends AppCompatActivity {
 
         initToolbar(AlbumLab.get(this).getAlbums().get(position).getAlbum_name()
         ,"共"+AlbumLab.get(this).getAlbums().get(position).getMusics().size()+"首歌");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        BottomFragment bottomFragment = new BottomFragment();
+        android.support.v4.app.FragmentManager manager = this.getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.add(R.id.bottom,bottomFragment);
+        transaction.commit();
     }
 
     public Toolbar initToolbar(CharSequence title,CharSequence subTitle) {
@@ -54,5 +63,10 @@ public class AlbumActivity extends AppCompatActivity {
             });
         }
         return toolbar;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

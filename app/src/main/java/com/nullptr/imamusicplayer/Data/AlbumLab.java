@@ -4,7 +4,10 @@ import android.content.Context;
 
 import com.nullptr.imamusicplayer.Utils.GetAlbum;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class AlbumLab {
@@ -43,5 +46,25 @@ public class AlbumLab {
 
     public int getCount(){
         return mAlbums.size();
+    }
+
+    public void sort_title(){
+        Collections.sort(mAlbums,new Comparator<Album>(){
+            public int compare(Album arg0, Album arg1) {
+                Collator collator = Collator.getInstance();
+                return collator.getCollationKey(arg0.getAlbum_name()).compareTo(
+                        collator.getCollationKey(arg1.getAlbum_name()));
+            }
+        });
+    }
+
+    public void sort_artist(){
+        Collections.sort(mAlbums,new Comparator<Album>(){
+            public int compare(Album arg0, Album arg1) {
+                Collator collator = Collator.getInstance();
+                return collator.getCollationKey(arg0.getArtist()).compareTo(
+                        collator.getCollationKey(arg1.getArtist()));
+            }
+        });
     }
 }

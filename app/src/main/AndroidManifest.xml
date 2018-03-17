@@ -11,10 +11,16 @@
         android:roundIcon="@mipmap/ic_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver android:name=".Fragment.BottomFragment$MusicBroadcast"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.nullptr.imamusicplayer.musictime"/>
+            </intent-filter>
+        </receiver>
         <activity android:name=".Acitivty.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

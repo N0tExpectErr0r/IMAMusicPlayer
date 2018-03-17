@@ -10,22 +10,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.nullptr.imamusicplayer.Adapter.MusicAdapter;
+import com.nullptr.imamusicplayer.Adapter.AlbumMusicAdapter;
 import com.nullptr.imamusicplayer.Data.Mp3Info;
 import com.nullptr.imamusicplayer.Data.Mp3Lab;
 import com.nullptr.imamusicplayer.R;
 
 import java.util.List;
 
-public class MusicListFragment extends Fragment{
+public class AlbumMusicListFragment extends Fragment{
 
     private RecyclerView musicList;
     private static List<Mp3Info> mMusics;
-    private static MusicAdapter adapter;
+    private static AlbumMusicAdapter adapter;
 
-    public static MusicListFragment newInstance(List<Mp3Info> musics){
+    public static AlbumMusicListFragment newInstance(List<Mp3Info> musics){
         mMusics = musics;
-        MusicListFragment frag = new MusicListFragment();
+        AlbumMusicListFragment frag = new AlbumMusicListFragment();
         return frag;
 
     }
@@ -43,10 +43,10 @@ public class MusicListFragment extends Fragment{
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         musicList.setLayoutManager(layoutManager);
         if (mMusics==null) {
-            adapter = new MusicAdapter(Mp3Lab.get(getActivity()).getMusics());
+            adapter = new AlbumMusicAdapter(Mp3Lab.get(getActivity()).getMusics());
             musicList.setAdapter(adapter);
         }else{
-            adapter = new MusicAdapter(mMusics);
+            adapter = new AlbumMusicAdapter(mMusics);
             musicList.setAdapter(adapter);
         }
         return v;

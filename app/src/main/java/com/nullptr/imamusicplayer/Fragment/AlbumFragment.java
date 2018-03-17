@@ -16,13 +16,14 @@ import com.nullptr.imamusicplayer.R;
 public class AlbumFragment extends Fragment {
 
     private RecyclerView albumList;
+    private static AlbumAdapter adapter;
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_album,container,false);
         albumList = (RecyclerView)v.findViewById(R.id.album_list);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         albumList.setLayoutManager(layoutManager);
-        AlbumAdapter adapter = new AlbumAdapter(AlbumLab.get(getActivity()).getAlbums());
+        adapter = new AlbumAdapter(AlbumLab.get(getActivity()).getAlbums());
 
         albumList.setAdapter(adapter);
         return v;
@@ -31,5 +32,9 @@ public class AlbumFragment extends Fragment {
     public static AlbumFragment newInstance(){
         AlbumFragment frag = new AlbumFragment();
         return frag;
+    }
+
+    public static void notifyChange(){
+        adapter.notifyDataSetChanged();
     }
 }

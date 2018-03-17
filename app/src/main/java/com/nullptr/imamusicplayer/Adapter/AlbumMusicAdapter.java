@@ -8,17 +8,16 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.nullptr.imamusicplayer.Data.AlbumLab;
 import com.nullptr.imamusicplayer.Data.Mp3Info;
-import com.nullptr.imamusicplayer.Data.Mp3Lab;
 import com.nullptr.imamusicplayer.Data.PlayingListLab;
 import com.nullptr.imamusicplayer.Fragment.BottomFragment;
 import com.nullptr.imamusicplayer.R;
 import com.nullptr.imamusicplayer.Service.PlayerService;
 import com.nullptr.imamusicplayer.TAG.PlayerMsg;
-
 import java.util.List;
 
-public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
+public class AlbumMusicAdapter extends RecyclerView.Adapter<AlbumMusicAdapter.ViewHolder>{
 
     private List<Mp3Info> musics;
 
@@ -39,7 +38,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
 
     }
 
-    public MusicAdapter(List<Mp3Info> music){
+    public AlbumMusicAdapter(List<Mp3Info> music){
         musics = music;
     }
 
@@ -52,9 +51,8 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder>{
             public void onClick(View view) {
                 int position = holder.getAdapterPosition();
                 Intent intent = new Intent(parent.getContext(),PlayerService.class);
-
-                intent.putExtra("path", Mp3Lab.get(parent.getContext()).getMusic(position).getUrl());
-                PlayingListLab.get().getPlayingList().setPlayingList(Mp3Lab.get(parent.getContext()).getMusics());
+                intent.putExtra("path", AlbumLab.get(parent.getContext()).getMusicsByPosition(AlbumLab.album_num).get(position).getUrl());
+                PlayingListLab.get().getPlayingList().setPlayingList(AlbumLab.get(parent.getContext()).getMusicsByPosition(AlbumLab.album_num));
                 PlayingListLab.get().getPlayingList().setCurrentNum(position);
                 PlayingListLab.isPlaying = true;
                 BottomFragment.updateUI();

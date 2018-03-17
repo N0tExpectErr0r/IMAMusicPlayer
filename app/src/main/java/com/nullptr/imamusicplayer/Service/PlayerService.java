@@ -12,17 +12,45 @@ public class PlayerService extends Service {
     private String path;                        //音乐文件路径
     private boolean isPause;                    //暂停状态
 
+    public final static int CURRENT_TIME_TYPE = 0;
+    public final static int DURATION_TYPE = 1;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
+    class MusicThread extends Thread {
+        @Override
+        public void run() {
+            //获得当前的时长
+            while (mediaPlayer.isPlaying()) {
+                int time = mediaPlayer.getCurrentPosition();
+                int duration = mediaPlayer.getDuration();
+                boolean nextMusic = false;
+                Intent intent = new Intent("com.nullptr.imamusicplayer.musictime");
+                intent.putExtra("time", time);
+                intent.putExtra("type", CURRENT_TIME_TYPE);
+                if (time==duration-1){
+                    nextMusic = true;
+                }
+                intent.putExtra("next_music",nextMusic);
+                sendBroadcast(intent);
+                //每隔一秒发送一次
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (mediaPlayer.isPlaying()){
+        /*if (mediaPlayer.isPlaying()){
             stop();
-        }
-        int position = intent.getIntExtra("position",1);
+        }*/
         path = intent.getStringExtra("path");
         int msg = intent.getIntExtra("MSG",0);
 
@@ -43,6 +71,7 @@ public class PlayerService extends Service {
         try {
             mediaPlayer.reset();//把各项参数恢复到初始状态
             mediaPlayer.setDataSource(path);
+            isPause = false;
             mediaPlayer.prepare();  //进行缓冲
             mediaPlayer.setOnPreparedListener(new PreparedListener(position));//注册一个监听器
         }
@@ -58,6 +87,11 @@ public class PlayerService extends Service {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
             isPause = true;
+        }else if (!mediaPlayer.isPlaying()){
+            mediaPlayer.start();
+            isPause = false;
+            MusicThread thread = new MusicThread();
+            thread.start();
         }
     }
 
@@ -101,6 +135,13 @@ public class PlayerService extends Service {
             if(positon > 0) {    //如果音乐不是从头播放
                 mediaPlayer.seekTo(positon);
             }
+            int time = mediaPlayer.getDuration();//获得所有的时间
+            Intent intent = new Intent("com.nullptr.imamusicplayer.musictime");
+            intent.putExtra("time", time);
+            intent.putExtra("type", DURATION_TYPE);
+            sendBroadcast(intent);
+            MusicThread thread = new MusicThread();
+            thread.start();
         }
     }
 }
