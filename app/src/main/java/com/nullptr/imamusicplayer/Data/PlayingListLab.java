@@ -1,9 +1,11 @@
 package com.nullptr.imamusicplayer.Data;
 
+import java.util.Random;
+
 public class PlayingListLab {
     final public static int ORDER = 0;
     final public static int REPEAT_ONCE = 1;
-    final public static int RANDOM = 3;
+    final public static int RANDOM = 2;
 
     private static PlayingListLab sPlayingListLab;
     private PlayingList mPlayingList;
@@ -46,7 +48,8 @@ public class PlayingListLab {
             case REPEAT_ONCE:
                 break;
             case RANDOM:
-                //TODO
+                Random random = new Random();
+                num = random.nextInt((mPlayingList.getPlayingList().size()-1));
                 break;
             default:
         }
@@ -66,10 +69,15 @@ public class PlayingListLab {
             case REPEAT_ONCE:
                 break;
             case RANDOM:
-                //TODO
+                Random random = new Random();
+                num = random.nextInt((mPlayingList.getPlayingList().size()-1));
                 break;
             default:
         }
         mPlayingList.setCurrentNum(num);
+    }
+
+    public void setPlayStatus(int status){
+        playStatus = status;
     }
 }

@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.nullptr.imamusicplayer.TAG.PlayerMsg;
 
@@ -11,9 +12,11 @@ public class PlayerService extends Service {
     private MediaPlayer mediaPlayer =  new MediaPlayer();       //媒体播放器对象
     private String path;                        //音乐文件路径
     private boolean isPause;                    //暂停状态
+    private int position;                   //播放位置
 
     public final static int CURRENT_TIME_TYPE = 0;
     public final static int DURATION_TYPE = 1;
+    public final static int NEXT_MUSIC = 2;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -26,15 +29,9 @@ public class PlayerService extends Service {
             //获得当前的时长
             while (mediaPlayer.isPlaying()) {
                 int time = mediaPlayer.getCurrentPosition();
-                int duration = mediaPlayer.getDuration();
-                boolean nextMusic = false;
                 Intent intent = new Intent("com.nullptr.imamusicplayer.musictime");
                 intent.putExtra("time", time);
                 intent.putExtra("type", CURRENT_TIME_TYPE);
-                if (time==duration-1){
-                    nextMusic = true;
-                }
-                intent.putExtra("next_music",nextMusic);
                 sendBroadcast(intent);
                 //每隔一秒发送一次
                 try {
@@ -52,10 +49,11 @@ public class PlayerService extends Service {
             stop();
         }*/
         path = intent.getStringExtra("path");
+        position = intent.getIntExtra("position",0);
         int msg = intent.getIntExtra("MSG",0);
 
         if(msg == PlayerMsg.PLAY_MSG) {
-            play(0);
+            play(position);
         } else if(msg == PlayerMsg.PAUSE_MSG) {
             pause();
         } else if(msg == PlayerMsg.STOP_MSG) {
@@ -74,6 +72,16 @@ public class PlayerService extends Service {
             isPause = false;
             mediaPlayer.prepare();  //进行缓冲
             mediaPlayer.setOnPreparedListener(new PreparedListener(position));//注册一个监听器
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    //播放完毕
+                    Intent intent = new Intent("com.nullptr.imamusicplayer.musictime");
+                    intent.putExtra("type", NEXT_MUSIC);
+                    Log.d("haha","completed");
+                    sendBroadcast(intent);
+                }
+            });
         }
         catch (Exception e) {
             e.printStackTrace();

@@ -12,13 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.nullptr.imamusicplayer.Data.Mp3Lab;
+import com.nullptr.imamusicplayer.Data.Mp3Info;
 import com.nullptr.imamusicplayer.Data.PlayingListLab;
 import com.nullptr.imamusicplayer.R;
 import com.nullptr.imamusicplayer.Service.PlayerService;
 import com.nullptr.imamusicplayer.TAG.PlayerMsg;
+import com.nullptr.imamusicplayer.Utils.ToastUtile;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -32,10 +32,11 @@ public class BottomFragment extends Fragment implements View.OnClickListener{
     private static ImageButton prev;
     private static ImageButton playPause;
     private static ImageButton next;
+    private static ImageButton playStatus;
 
     private static SeekBar mSeekBar;
 
-    MusicBroadcast musicBroadcast;
+    public MusicBroadcast musicBroadcast;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,14 +44,19 @@ public class BottomFragment extends Fragment implements View.OnClickListener{
         musicBroadcast = new MusicBroadcast();
         IntentFilter filter = new IntentFilter();
         filter.addAction("com.nullptr.imamusicplayer.musictime");
-        getActivity().registerReceiver(musicBroadcast,filter);
+        if (getActivity().getClass().getSimpleName().equals("MainActivity")) {
+            getActivity().registerReceiver(musicBroadcast, filter);
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        getActivity().unregisterReceiver(musicBroadcast);//取消注册广播
+        if (getActivity().getClass().getSimpleName().equals("MainActivity")) {
+            getActivity().unregisterReceiver(musicBroadcast);
+        }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
@@ -61,23 +67,53 @@ public class BottomFragment extends Fragment implements View.OnClickListener{
         prev = (ImageButton) v.findViewById(R.id.prev_button);
         playPause = (ImageButton)v.findViewById(R.id.play_pause_button);
         next = (ImageButton)v.findViewById(R.id.next_button);
+        playStatus = (ImageButton)v.findViewById(R.id.play_status);
 
         mSeekBar = (SeekBar)v.findViewById(R.id.seekbar);
+
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                int position = seekBar.getProgress();
+                String path = PlayingListLab.get().getCurrentMusic().getUrl();
+                PlayingListLab.isPlaying = true;
+                updateUI();
+                Intent intent = new Intent(seekBar.getContext(),PlayerService.class);
+
+                intent.putExtra("path",path);
+                intent.putExtra("position",position);
+                intent.putExtra("MSG", PlayerMsg.PLAY_MSG);
+                seekBar.getContext().startService(intent);
+            }
+        });
 
         mTextViewDuration = (TextView)v.findViewById(R.id.music_time);
         mTextViewCurrentTime = (TextView)v.findViewById(R.id.current_time);
 
         if (PlayingListLab.get().getPlayingList().getPlayingList().size() == 0){
-            PlayingListLab.get().getPlayingList().setPlayingList(Mp3Lab.get(getActivity()).getMusics());
-            PlayingListLab.get().getPlayingList().setCurrentNum(0);
+            Mp3Info music = new Mp3Info();
+            music.setTitle("歌曲名称");
+            music.setArtist("歌手名");
+            PlayingListLab.get().getPlayingList().getPlayingList().add(music);
         }
 
-
         updateUI();
+
 
         prev.setOnClickListener(this);
         playPause.setOnClickListener(this);
         next.setOnClickListener(this);
+        playStatus.setOnClickListener(this);
         return v;
     }
 
@@ -85,21 +121,33 @@ public class BottomFragment extends Fragment implements View.OnClickListener{
         playingName.setText(PlayingListLab.get().getCurrentMusic().getTitle());
         playingArtist.setText(PlayingListLab.get().getCurrentMusic().getArtist());
         if (PlayingListLab.isPlaying){
-            playPause.setBackgroundResource(R.drawable.ic_pause);
+            playPause.setBackgroundResource(R.drawable.ic_pause_white);
         }else{
-            playPause.setBackgroundResource(R.drawable.ic_play);
+            playPause.setBackgroundResource(R.drawable.ic_play_white);
+        }
+        switch (PlayingListLab.playStatus){
+            case PlayingListLab.ORDER:
+                playStatus.setBackgroundResource(R.drawable.ic_order);
+                break;
+            case PlayingListLab.REPEAT_ONCE:
+                playStatus.setBackgroundResource(R.drawable.ic_repeat);
+                break;
+            case PlayingListLab.RANDOM:
+                playStatus.setBackgroundResource(R.drawable.ic_random);
+                break;
         }
         int time = PlayingListLab.duration;
         Date dateDuration = new Date(time);
         SimpleDateFormat formatDuration = new SimpleDateFormat("mm:ss");
         mSeekBar.setMax(time);
+
         mTextViewDuration.setText(formatDuration.format(dateDuration));
     }
 
     @Override
     public void onClick(View view) {
-        if (PlayingListLab.get().getPlayingList().getPlayingList().size() == 0){
-            Toast.makeText(getActivity(),"播放列表中没有歌曲",Toast.LENGTH_SHORT).show();
+        if (PlayingListLab.get().getPlayingList().getPlayingList().get(0).getTitle().equals("歌曲名称")){
+            ToastUtile.showText(getActivity(),"播放列表中没有歌曲");
             return;
         }
         switch (view.getId()){
@@ -129,6 +177,24 @@ public class BottomFragment extends Fragment implements View.OnClickListener{
                 intent_play_pause.putExtra("MSG", PlayerMsg.PAUSE_MSG);
                 getActivity().startService(intent_play_pause);
                 break;
+            case R.id.play_status:
+                if (++PlayingListLab.playStatus>2){
+                    PlayingListLab.playStatus = 0;
+                }
+                updateUI();
+
+                switch (PlayingListLab.playStatus){
+                    case PlayingListLab.ORDER:
+                        ToastUtile.showText(getActivity(),"顺序播放");
+                        break;
+                    case PlayingListLab.REPEAT_ONCE:
+                        ToastUtile.showText(getActivity(),"单曲循环");
+                        break;
+                    case PlayingListLab.RANDOM:
+                        ToastUtile.showText(getActivity(),"随机播放");
+                        break;
+                }
+                break;
         }
     }
 
@@ -148,20 +214,19 @@ public class BottomFragment extends Fragment implements View.OnClickListener{
                     break;
                 case PlayerService.CURRENT_TIME_TYPE:
                     int currenttime=intent.getIntExtra("time", 0);
-                    boolean nextMusic = intent.getBooleanExtra("next_music",false);
                     Date dateCurrentTime = new Date(currenttime);
                     SimpleDateFormat formatCurrent = new SimpleDateFormat("mm:ss");
                     mSeekBar.setProgress(currenttime);
                     mTextViewCurrentTime.setText(formatCurrent.format(dateCurrentTime));
-                    if (nextMusic){
-                        PlayingListLab.get().next();
-                        PlayingListLab.isPlaying = true;
-                        updateUI();
-                        Intent intent_next = new Intent(getActivity(), PlayerService.class);
-                        intent_next.putExtra("path",PlayingListLab.get().getCurrentMusic().getUrl());
-                        intent_next.putExtra("MSG", PlayerMsg.PLAY_MSG);
-                        getActivity().startService(intent_next);
-                    }
+                    break;
+                case PlayerService.NEXT_MUSIC:
+                    PlayingListLab.get().next();
+                    PlayingListLab.isPlaying = true;
+                    updateUI();
+                    Intent intent_next = new Intent(getActivity(), PlayerService.class);
+                    intent_next.putExtra("path",PlayingListLab.get().getCurrentMusic().getUrl());
+                    intent_next.putExtra("MSG", PlayerMsg.PLAY_MSG);
+                    getActivity().startService(intent_next);
                     break;
                 default:
                     break;

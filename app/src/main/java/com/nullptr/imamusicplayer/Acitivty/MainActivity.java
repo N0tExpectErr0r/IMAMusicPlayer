@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         initToolbar("IMA音乐");   //初始化ActionBar
 
         initTab();
-
     }
 
 
@@ -53,9 +52,10 @@ public class MainActivity extends AppCompatActivity {
         BottomFragment bottomFragment = new BottomFragment();
         android.support.v4.app.FragmentManager manager = this.getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.bottom,bottomFragment);
+        transaction.replace(R.id.bottom,bottomFragment);
         transaction.commit();
     }
+
 
     public void askPermission(){
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
