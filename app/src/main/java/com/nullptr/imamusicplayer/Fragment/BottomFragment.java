@@ -25,7 +25,6 @@ import java.util.Date;
 
 public class BottomFragment extends Fragment implements View.OnClickListener{
     private static TextView playingName;
-    private static TextView playingArtist;
     private static TextView mTextViewDuration;
     private static TextView mTextViewCurrentTime;
 
@@ -33,6 +32,8 @@ public class BottomFragment extends Fragment implements View.OnClickListener{
     private static ImageButton playPause;
     private static ImageButton next;
     private static ImageButton playStatus;
+
+    private static Context mContext;
 
     private static SeekBar mSeekBar;
 
@@ -47,6 +48,7 @@ public class BottomFragment extends Fragment implements View.OnClickListener{
         if (getActivity().getClass().getSimpleName().equals("MainActivity")) {
             getActivity().registerReceiver(musicBroadcast, filter);
         }
+        mContext = getActivity();
     }
 
     @Override
@@ -62,7 +64,6 @@ public class BottomFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater,ViewGroup container,Bundle savedInstanceState){
         View v = inflater.inflate(R.layout.fragment_bottom,container,false);
         playingName = (TextView)v.findViewById(R.id.playing_music_name);
-        playingArtist = (TextView)v.findViewById(R.id.playing_music_artist);
 
         prev = (ImageButton) v.findViewById(R.id.prev_button);
         playPause = (ImageButton)v.findViewById(R.id.play_pause_button);
@@ -119,7 +120,7 @@ public class BottomFragment extends Fragment implements View.OnClickListener{
 
     public static void updateUI(){
         playingName.setText(PlayingListLab.get().getCurrentMusic().getTitle());
-        playingArtist.setText(PlayingListLab.get().getCurrentMusic().getArtist());
+
         if (PlayingListLab.isPlaying){
             playPause.setBackgroundResource(R.drawable.ic_pause_white);
         }else{
@@ -198,7 +199,11 @@ public class BottomFragment extends Fragment implements View.OnClickListener{
         }
     }
 
-    public class MusicBroadcast extends BroadcastReceiver {
+    private void nextMusic(){
+
+    }
+
+    public static class MusicBroadcast extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             int type= intent.getIntExtra("type", 0);
@@ -223,10 +228,10 @@ public class BottomFragment extends Fragment implements View.OnClickListener{
                     PlayingListLab.get().next();
                     PlayingListLab.isPlaying = true;
                     updateUI();
-                    Intent intent_next = new Intent(getActivity(), PlayerService.class);
+                    Intent intent_next = new Intent(mContext, PlayerService.class);
                     intent_next.putExtra("path",PlayingListLab.get().getCurrentMusic().getUrl());
                     intent_next.putExtra("MSG", PlayerMsg.PLAY_MSG);
-                    getActivity().startService(intent_next);
+                    mContext.startService(intent_next);
                     break;
                 default:
                     break;

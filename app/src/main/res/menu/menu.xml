@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/sleep"
+        android:title="定时停止播放"
+        android:icon="@drawable/ic_sleep"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/sort_name"
         android:title="按名称排序"
         app:showAsAction="never"/>

@@ -1,6 +1,9 @@
 package com.nullptr.imamusicplayer.Acitivty;
 
 import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -12,10 +15,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.nullptr.imamusicplayer.Data.AlbumLab;
@@ -24,6 +31,9 @@ import com.nullptr.imamusicplayer.Fragment.AlbumFragment;
 import com.nullptr.imamusicplayer.Fragment.BottomFragment;
 import com.nullptr.imamusicplayer.Fragment.MusicListFragment;
 import com.nullptr.imamusicplayer.R;
+import com.nullptr.imamusicplayer.Receiver.SleepReceiver;
+import com.nullptr.imamusicplayer.Service.SleepService;
+import com.nullptr.imamusicplayer.Utils.ToastUtile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout mTabLayout;
     private MusicListFragment mMusicListFragment;
     private AlbumFragment albumFragment;
+
+    private SleepReceiver sleepReceiver;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +54,19 @@ public class MainActivity extends AppCompatActivity {
         askPermission();
         initToolbar("IMA音乐");   //初始化ActionBar
 
+        sleepReceiver = new SleepReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("com.nullptr.imamusicplayer.sleep");
+        registerReceiver(sleepReceiver, filter);
         initTab();
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(sleepReceiver);
+    }
 
     @Override
     protected void onStart() {
@@ -129,8 +151,36 @@ public class MainActivity extends AppCompatActivity {
                 mMusicListFragment.notifyChange();
                 albumFragment.notifyChange();
                 break;
+            case R.id.sleep:
+                showSleepDialog();
+                break;
         }
         return true;
+    }
+
+    public void showSleepDialog(){
+        AlertDialog.Builder sleepDialog = new AlertDialog.Builder(MainActivity.this);
+        final View dialogView = LayoutInflater.from(MainActivity.this).inflate(R.layout.dialog_sleep,null);
+        sleepDialog.setTitle("请输入要定时关闭的时间:");
+        sleepDialog.setView(dialogView);
+        sleepDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                int time;
+                EditText edit_text = (EditText) dialogView.findViewById(R.id.edit_text);
+                if (!edit_text.getText().toString().equals("")) {
+                    time = 60 * Integer.parseInt(edit_text.getText().toString());
+                }else {
+                    time = 0;
+                }
+                ToastUtile.showText(MainActivity.this,"定时任务已开始，时间为"+time+"分钟");
+                Intent intent = new Intent(MainActivity.this,SleepService.class);
+                intent.putExtra("sleep_time",time);
+                startService(intent);
+            }
+        });
+        sleepDialog.setNegativeButton("取消",null);
+        sleepDialog.show();
     }
 
     public Toolbar initToolbar(CharSequence title) {

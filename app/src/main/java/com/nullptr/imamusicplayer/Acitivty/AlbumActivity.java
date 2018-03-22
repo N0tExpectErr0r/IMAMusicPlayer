@@ -26,6 +26,7 @@ public class AlbumActivity extends AppCompatActivity {
         int position = intent.getIntExtra("position",-1);
         AlbumLab.album_num = position;
 
+
         musicListFragment=AlbumMusicListFragment.newInstance(AlbumLab.get(this).getMusicsByPosition(position));
 
         android.support.v4.app.FragmentManager manager = this.getSupportFragmentManager();
@@ -36,6 +37,7 @@ public class AlbumActivity extends AppCompatActivity {
         initToolbar(AlbumLab.get(this).getAlbums().get(position).getAlbum_name()
         ,"共"+AlbumLab.get(this).getAlbums().get(position).getMusics().size()+"首歌");
     }
+
 
     @Override
     protected void onStart() {

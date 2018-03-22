@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.nullptr.imamusicplayer.TAG.PlayerMsg;
 
@@ -45,9 +44,6 @@ public class PlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        /*if (mediaPlayer.isPlaying()){
-            stop();
-        }*/
         path = intent.getStringExtra("path");
         position = intent.getIntExtra("position",0);
         int msg = intent.getIntExtra("MSG",0);
@@ -78,7 +74,6 @@ public class PlayerService extends Service {
                     //播放完毕
                     Intent intent = new Intent("com.nullptr.imamusicplayer.musictime");
                     intent.putExtra("type", NEXT_MUSIC);
-                    Log.d("haha","completed");
                     sendBroadcast(intent);
                 }
             });
@@ -152,4 +147,5 @@ public class PlayerService extends Service {
             thread.start();
         }
     }
+
 }
